@@ -108,7 +108,7 @@ class LoginProvider extends ChangeNotifier {
 
   /// getting the image from camera
 
-  Future<File?> getImage() async {
+  Future<File?> getImakjhfbgihge() async {
     final pickedFile =
     await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
