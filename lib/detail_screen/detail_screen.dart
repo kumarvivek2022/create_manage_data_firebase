@@ -15,84 +15,140 @@ class _DetailScreenState extends State<DetailScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descController = TextEditingController();
   File? _image;
-  // String? imageBase;
-  // XFile? photo;
   @override
   Widget build(BuildContext context) {
     return Consumer<LoginProvider>(
       builder: (_, userInfoProvider, __) {
         return Scaffold(
+          backgroundColor: Colors.grey.withOpacity(0.8),
           appBar: AppBar(
-            title: const Text("Task Detail"),
+            backgroundColor: Colors.black,
+            title: const Center(child: Text("Create Task")),
           ),
           body: Padding(
             padding: const EdgeInsets.only(left: 30, right: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                const Text("Title *"),
-                TextField(controller: titleController),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text("Description *"),
-                TextField(
-                  controller: descController,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    TextButton(
-                        onPressed: () async {
-                          Provider.of<LoginProvider>(context, listen: false)
-                              .getImage()
-                              .then((value) {
-                              _image = value;
-                            });
-                        },
-                        child: const Text("Capture Image *")),
-                    const SizedBox(
-                      width: 10,
+            child: Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                 const  Center(
+                    child: Text("Add Task",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),),
+                  ),
+                  const Text("Title *",style: TextStyle(color: Colors.white),),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  // TextField(controller: titleController),
+                  Container(
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                      BorderRadius.circular(5),
                     ),
-                    TextButton(
-                        onPressed: () async {
+                    child: TextFormField(
+                      controller: titleController,
+                      obscureText: false,
+                      decoration: const InputDecoration(
+                        hintStyle: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black),
+                        hintText: "title",
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text("Description *",style: TextStyle(color: Colors.white),),
+                  const SizedBox(height: 20,),
+                  // TextField(
+                  //   controller: descController,
+                  // ),
+                  Container(
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                      BorderRadius.circular(5),
+                    ),
+                    child: TextFormField(
+                      controller: descController,
+                      obscureText: false,
+                      decoration: const InputDecoration(
+                        hintStyle: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black),
+                        hintText: "title",
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 100),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage: FileImage(_image ?? File('')),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.black
+                          ),
+                            onPressed: () {
+                              Provider.of<LoginProvider>(context, listen: false)
+                                  .getImage()
+                                  .then((value) {
+                                _image = value;
+                              });
+                            },
+                            icon: const Icon(Icons.camera),
+                            label: const Text("Capture")),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.black
+                      ),
+                        onPressed: () {
+                          print("image url ----> $_image");
                           Provider.of<LoginProvider>(context, listen: false)
-                              .getGalleryImage()
-                              .then((value) {
-                              _image = value;
-                          });
+                              .uploadDataInFireStore(
+                                  context: context,
+                                  title: titleController.text,
+                                  desc: descController.text,
+                                  imageUrl: _image ?? File(''));
                         },
-                        child: const Text("upload from gallery *")),
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundImage: FileImage(_image ?? File('')),
-                    )
-                  ],
-                ),
-                const Spacer(),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        print("image url ----> $_image");
-                        Provider.of<LoginProvider>(context,listen: false)
-                            .uploadDataInFireStore(
-                                context: context,
-                                title: titleController.text,
-                                desc: descController.text,
-                                imageUrl: _image??File(''));
-                      },
-                      child: const Text("Submit")),
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-              ],
+                        child: const Text("Submit")),
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                ],
+              ),
             ),
           ),
         );

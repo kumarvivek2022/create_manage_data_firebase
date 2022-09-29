@@ -28,7 +28,8 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("User Login"),
+        backgroundColor: Colors.orange.withOpacity(0.5),
+        title: const Center(child: Text("User Login")),
       ),
       body: Form(
         key: _formKey,
@@ -79,36 +80,31 @@ class _LoginState extends State<Login> {
                   },
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 60.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        // Validate returns true if the form is valid, otherwise false.
-                        if (_formKey.currentState!.validate()) {
-                          final uuid =
-                          Provider.of<LoginProvider>(context, listen: false)
-                              .userLogin(
-                            context: context,
-                            email: emailController.text,
-                            password: passwordController.text,
-                          )
-                              .then((value) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const ListScreen()));
-                          });
-                        }
-                      },
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                  ],
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Validate returns true if the form is valid, otherwise false.
+                    if (_formKey.currentState!.validate()) {
+                      final uuid =
+                      Provider.of<LoginProvider>(context, listen: false)
+                          .userLogin(
+                        context: context,
+                        email: emailController.text,
+                        password: passwordController.text,
+                      )
+                          .then((value) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ListScreen()));
+                      });
+                    }
+                  },
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
                 ),
               ),
               Row(

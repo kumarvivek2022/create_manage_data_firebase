@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:create_manage_list_firebase/detail_screen/detail_screen.dart';
+import 'package:create_manage_list_firebase/view_screen/view_screen_ui.dart';
 import 'package:flutter/material.dart';
 
 class ListScreen extends StatefulWidget {
@@ -13,23 +14,15 @@ class _ListScreenState extends State<ListScreen> {
   ///fetching data from firestore
 
   CollectionReference taskColl =
-  FirebaseFirestore.instance.collection('taskcollection');
+      FirebaseFirestore.instance.collection('taskcollection');
 
   void updateTask(List data) {
     print("hitting");
-    taskColl.doc("taskdata").set(
-        {
-          "array": FieldValue.arrayUnion(data)
-        }
-    );
-
-
-
+    taskColl.doc("taskdata").set({"array": FieldValue.arrayUnion(data)});
   }
 
-
-
-  _openPopUpMenu(String title, String desc, String image,int id, int tid, Offset offset, List data) async {
+  _openPopUpMenu(String title, String desc, String image, int id, int tid,
+      Offset offset, List data) async {
     double left = offset.dx;
     double top = offset.dy;
     await showMenu(
@@ -56,15 +49,15 @@ class _ListScreenState extends State<ListScreen> {
       elevation: 8.0,
     ).then((value) {
       if (value != "null") {
-        data[id]["task_status"]=value.toString();
-        updateTask(
-          data
-        );
-      };
+        data[id]["task_status"] = value.toString();
+        updateTask(data);
+      }
+      ;
     });
   }
 
-  _progressPopUpMenu(String title, String desc, String image,int id, int tid, Offset offset, List data) async {
+  _progressPopUpMenu(String title, String desc, String image, int id, int tid,
+      Offset offset, List data) async {
     double left = offset.dx;
     double top = offset.dy;
     await showMenu(
@@ -90,18 +83,16 @@ class _ListScreenState extends State<ListScreen> {
       ],
       elevation: 8.0,
     ).then((value) {
-// NOTE: even you didnt select item this method will be called with null of value so you should call your call back with checking if value is not null
-
       if (value != "null") {
-        data[id]["task_status"]=value.toString();
-        updateTask(
-            data
-        );
-      };
+        data[id]["task_status"] = value.toString();
+        updateTask(data);
+      }
+      ;
     });
   }
 
-  _pendingPopUpMenu(String title, String desc, String image,int id, int tid, Offset offset, List data) async {
+  _pendingPopUpMenu(String title, String desc, String image, int id, int tid,
+      Offset offset, List data) async {
     double left = offset.dx;
     double top = offset.dy;
     await showMenu(
@@ -127,18 +118,16 @@ class _ListScreenState extends State<ListScreen> {
       ],
       elevation: 8.0,
     ).then((value) {
-// NOTE: even you didnt select item this method will be called with null of value so you should call your call back with checking if value is not null
-
       if (value != "null") {
-        data[id]["task_status"]=value.toString();
-        updateTask(
-            data
-        );
-      };
+        data[id]["task_status"] = value.toString();
+        updateTask(data);
+      }
+      ;
     });
   }
 
-  _resolvePopUpMenu(String title, String desc, String image,int id, int tid, Offset offset, List data) async {
+  _resolvePopUpMenu(String title, String desc, String image, int id, int tid,
+      Offset offset, List data) async {
     double left = offset.dx;
     double top = offset.dy;
     await showMenu(
@@ -167,15 +156,15 @@ class _ListScreenState extends State<ListScreen> {
 // NOTE: even you didnt select item this method will be called with null of value so you should call your call back with checking if value is not null
 
       if (value != "null") {
-        data[id]["task_status"]=value.toString();
-        updateTask(
-            data
-        );
-      };
+        data[id]["task_status"] = value.toString();
+        updateTask(data);
+      }
+      ;
     });
   }
 
-  _closePopUpMenu(String title, String desc, String image,int id, int tid, Offset offset, List data) async {
+  _closePopUpMenu(String title, String desc, String image, int id, int tid,
+      Offset offset, List data) async {
     double left = offset.dx;
     double top = offset.dy;
     await showMenu(
@@ -204,24 +193,30 @@ class _ListScreenState extends State<ListScreen> {
 // NOTE: even you didnt select item this method will be called with null of value so you should call your call back with checking if value is not null
 
       if (value != "null") {
-        data[id]["task_status"]=value.toString();
-        updateTask(
-            data
-        );
-      };
+        data[id]["task_status"] = value.toString();
+        updateTask(data);
+      }
+      ;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.grey.withOpacity(0.5),
         appBar: AppBar(
-          title: const Text("Task"),
+          backgroundColor: Colors.black,
+          title: const Text("Task Details"),
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.only(right: 10, bottom: 10),
               child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.purple),
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: const BorderSide(color: Colors.grey),
+                  ))),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -280,7 +275,8 @@ class _ListScreenState extends State<ListScreen> {
                                 for (var i = 0; i < docs.length; i++) {
                                   if (docs[i]['task_status'] == "open") {
                                     indexes.add(i);
-                                    mydoc.add(snapshot.data!.data()!['array'][i]);
+                                    mydoc.add(
+                                        snapshot.data!.data()!['array'][i]);
                                   }
                                 }
                                 print(mydoc.toString());
@@ -297,23 +293,336 @@ class _ListScreenState extends State<ListScreen> {
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: GestureDetector(
-                                                    onTapDown: (TapDownDetails details) {
+                                                    onTapDown: (TapDownDetails
+                                                        details) {
                                                       _openPopUpMenu(
-                                                          mydoc[i]['title'].toString(),
-                                                          docs[
-                                                          i][
-                                                          'Description'],
+                                                          mydoc[i]['title']
+                                                              .toString(),
+                                                          docs[i]
+                                                              ['Description'],
                                                           mydoc[i]['image']
                                                               .toString()
                                                               .replaceAll(
-                                                              '"', ''),
-                                                          indexes[
-                                                          i],
-                                                          mydoc[
-                                                          i][
-                                                          'task_id'],
-                                                          details.globalPosition,
-                                                      docs);
+                                                                  '"', ''),
+                                                          indexes[i],
+                                                          mydoc[i]['task_id'],
+                                                          details
+                                                              .globalPosition,
+                                                          docs);
+                                                    },
+                                                    child: const Icon(
+                                                      Icons.more_vert,
+                                                      color: Colors.black,
+                                                    ),
+                                                  )),
+                                            ),
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    flex: 4,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ViewScreen(
+                                                                          title:
+                                                                              mydoc[i]['title'].toString(),
+                                                                          desc: docs[i]
+                                                                              [
+                                                                              'Description'],
+                                                                          imageUrl: docs[i]['image'].toString().replaceAll(
+                                                                              '"',
+                                                                              ''),
+                                                                        )));
+                                                      },
+                                                      child: Container(
+                                                        margin: const EdgeInsets
+                                                            .all(5.0),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(3.0),
+                                                        decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .black)),
+                                                        height: 200,
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Image.network(
+                                                            docs[i]['image']
+                                                                .toString()
+                                                                .replaceAll(
+                                                                    '"', ''),
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 3,
+                                                    child: Container(
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3.0),
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color: Colors
+                                                                  .black)),
+                                                      height: 200,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              const Text(
+                                                                  "Description"),
+                                                              Expanded(
+                                                                  child: Text(docs[
+                                                                          i][
+                                                                      'Description'])),
+                                                            ],
+                                                          )),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    : const Center(
+                                        child: Text("No Task Found"),
+                                      );
+                              }
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            },
+                          ),
+                          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                            stream: FirebaseFirestore.instance
+                                .collection('taskcollection')
+                                .doc('taskdata')
+                                .snapshots(),
+                            builder: (_, snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Error = ${snapshot.error}');
+                              }
+                              if (snapshot.hasData) {
+                                var mydoc = [];
+                                var indexes = [];
+                                var docs = snapshot.data!.data()!['array'];
+                                print(docs.toString());
+                                for (var i = 0; i < docs.length; i++) {
+                                  if (docs[i]['task_status'] == "progress") {
+                                    indexes.add(i);
+                                    mydoc.add(
+                                        snapshot.data!.data()!['array'][i]);
+                                  }
+                                }
+                                print(mydoc.toString());
+                                return mydoc.isNotEmpty
+                                    ? ListView.builder(
+                                        itemCount: mydoc.length,
+                                        itemBuilder: (_, i) {
+                                          return ExpansionTile(
+                                            title: Text(mydoc[i]['title']),
+                                            trailing: SizedBox(
+                                              height: 100,
+                                              width: 50,
+                                              child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: GestureDetector(
+                                                    onTapDown: (TapDownDetails
+                                                        details) {
+                                                      _progressPopUpMenu(
+                                                          mydoc[i]['title']
+                                                              .toString(),
+                                                          docs[i]
+                                                              ['Description'],
+                                                          mydoc[i]['image']
+                                                              .toString()
+                                                              .replaceAll(
+                                                                  '"', ''),
+                                                          indexes[i],
+                                                          mydoc[i]['task_id'],
+                                                          details
+                                                              .globalPosition,
+                                                          docs);
+                                                    },
+                                                    child: const Icon(
+                                                      Icons.more_vert,
+                                                      color: Colors.black,
+                                                    ),
+                                                  )),
+                                            ),
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    flex: 4,
+                                                    child: InkWell(
+                                                      onTap: () {},
+                                                      child: Container(
+                                                        margin: const EdgeInsets
+                                                            .all(5.0),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(3.0),
+                                                        decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .black)),
+                                                        height: 200,
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Image.network(
+                                                            docs[i]['image']
+                                                                .toString()
+                                                                .replaceAll(
+                                                                    '"', ''),
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 3,
+                                                    child: Container(
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3.0),
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color: Colors
+                                                                  .black)),
+                                                      height: 200,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              const Text(
+                                                                  "Description"),
+                                                              Expanded(
+                                                                  child: Text(docs[
+                                                                          i][
+                                                                      'Description'])),
+                                                            ],
+                                                          )),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    : const Center(
+                                        child: Text("No Task Found"),
+                                      );
+                              }
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            },
+                          ),
+                          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                            stream: FirebaseFirestore.instance
+                                .collection('taskcollection')
+                                .doc('taskdata')
+                                .snapshots(),
+                            builder: (_, snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Error = ${snapshot.error}');
+                              }
+                              if (snapshot.hasData) {
+                                var mydoc = [];
+                                var indexes = [];
+                                var docs = snapshot.data!.data()!['array'];
+                                print(docs.toString());
+                                for (var i = 0; i < docs.length; i++) {
+                                  if (docs[i]['task_status'] == "pending") {
+                                    indexes.add(i);
+                                    mydoc.add(
+                                        snapshot.data!.data()!['array'][i]);
+                                  }
+                                }
+                                print(mydoc.toString());
+                                return mydoc.isNotEmpty
+                                    ? ListView.builder(
+                                        itemCount: mydoc.length,
+                                        itemBuilder: (_, i) {
+                                          return ExpansionTile(
+                                            title: Text(mydoc[i]['title']),
+                                            trailing: SizedBox(
+                                              height: 100,
+                                              width: 50,
+                                              child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: GestureDetector(
+                                                    onTapDown: (TapDownDetails
+                                                        details) {
+                                                      _pendingPopUpMenu(
+                                                          mydoc[i]['title']
+                                                              .toString(),
+                                                          docs[i]
+                                                              ['Description'],
+                                                          mydoc[i]['image']
+                                                              .toString()
+                                                              .replaceAll(
+                                                                  '"', ''),
+                                                          indexes[i],
+                                                          mydoc[i]['task_id'],
+                                                          details
+                                                              .globalPosition,
+                                                          docs);
                                                     },
                                                     child: const Icon(
                                                       Icons.more_vert,
@@ -425,427 +734,133 @@ class _ListScreenState extends State<ListScreen> {
                                 var docs = snapshot.data!.data()!['array'];
                                 print(docs.toString());
                                 for (var i = 0; i < docs.length; i++) {
-                                  if (docs[i]['task_status'] == "progress") {
-                                    indexes.add(i);
-                                    mydoc.add(snapshot.data!.data()!['array'][i]);
-                                  }
-                                }
-                                print(mydoc.toString());
-                                return mydoc.isNotEmpty
-                                    ? ListView.builder(
-                                  itemCount: mydoc.length,
-                                  itemBuilder: (_, i) {
-                                    return ExpansionTile(
-                                      title: Text(mydoc[i]['title']),
-                                      trailing: SizedBox(
-                                        height: 100,
-                                        width: 50,
-                                        child: Padding(
-                                            padding:
-                                            const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                              onTapDown: (TapDownDetails details) {
-                                                _progressPopUpMenu(
-                                                    mydoc[i]['title'].toString(),
-                                                    docs[
-                                                    i][
-                                                    'Description'],
-                                                    mydoc[i]['image']
-                                                        .toString()
-                                                        .replaceAll(
-                                                        '"', ''),
-                                                    indexes[
-                                                    i],
-                                                    mydoc[
-                                                    i][
-                                                    'task_id'],
-                                                    details.globalPosition,
-                                                    docs);
-                                              },
-                                              child: const Icon(
-                                                Icons.more_vert,
-                                                color: Colors.black,
-                                              ),
-                                            )),
-                                      ),
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 4,
-                                              child: Container(
-                                                margin:
-                                                const EdgeInsets.all(
-                                                    5.0),
-                                                padding:
-                                                const EdgeInsets.all(
-                                                    3.0),
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors
-                                                            .black)),
-                                                height: 200,
-                                                width:
-                                                MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Padding(
-                                                  padding:
-                                                  const EdgeInsets
-                                                      .all(8.0),
-                                                  child: Image.network(
-                                                    docs[i]['image']
-                                                        .toString()
-                                                        .replaceAll(
-                                                        '"', ''),
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Container(
-                                                margin:
-                                                const EdgeInsets.all(
-                                                    5.0),
-                                                padding:
-                                                const EdgeInsets.all(
-                                                    3.0),
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors
-                                                            .black)),
-                                                height: 200,
-                                                width:
-                                                MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Padding(
-                                                    padding:
-                                                    const EdgeInsets
-                                                        .all(8.0),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                      children: [
-                                                        const Text(
-                                                            "Description"),
-                                                        Expanded(
-                                                            child: Text(docs[
-                                                            i][
-                                                            'Description'])),
-                                                      ],
-                                                    )),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    );
-                                  },
-                                )
-                                    : const Center(
-                                  child: Text("No Task Found"),
-                                );
-                              }
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            },
-                          ),
-                          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                            stream: FirebaseFirestore.instance
-                                .collection('taskcollection')
-                                .doc('taskdata')
-                                .snapshots(),
-                            builder: (_, snapshot) {
-                              if (snapshot.hasError) {
-                                return Text('Error = ${snapshot.error}');
-                              }
-                              if (snapshot.hasData) {
-                                var mydoc = [];
-                                var indexes = [];
-                                var docs = snapshot.data!.data()!['array'];
-                                print(docs.toString());
-                                for (var i = 0; i < docs.length; i++) {
-                                  if (docs[i]['task_status'] == "pending") {
-                                    indexes.add(i);
-                                    mydoc.add(snapshot.data!.data()!['array'][i]);
-                                  }
-                                }
-                                print(mydoc.toString());
-                                return mydoc.isNotEmpty
-                                    ? ListView.builder(
-                                  itemCount: mydoc.length,
-                                  itemBuilder: (_, i) {
-                                    return ExpansionTile(
-                                      title: Text(mydoc[i]['title']),
-                                      trailing: SizedBox(
-                                        height: 100,
-                                        width: 50,
-                                        child: Padding(
-                                            padding:
-                                            const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                              onTapDown: (TapDownDetails details) {
-                                                _pendingPopUpMenu(
-                                                    mydoc[i]['title'].toString(),
-                                                    docs[
-                                                    i][
-                                                    'Description'],
-                                                    mydoc[i]['image']
-                                                        .toString()
-                                                        .replaceAll(
-                                                        '"', ''),
-                                                    indexes[
-                                                    i],
-                                                    mydoc[
-                                                    i][
-                                                    'task_id'],
-                                                    details.globalPosition,
-                                                    docs);
-                                              },
-                                              child: const Icon(
-                                                Icons.more_vert,
-                                                color: Colors.black,
-                                              ),
-                                            )),
-                                      ),
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 4,
-                                              child: Container(
-                                                margin:
-                                                const EdgeInsets.all(
-                                                    5.0),
-                                                padding:
-                                                const EdgeInsets.all(
-                                                    3.0),
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors
-                                                            .black)),
-                                                height: 200,
-                                                width:
-                                                MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Padding(
-                                                  padding:
-                                                  const EdgeInsets
-                                                      .all(8.0),
-                                                  child: Image.network(
-                                                    docs[i]['image']
-                                                        .toString()
-                                                        .replaceAll(
-                                                        '"', ''),
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Container(
-                                                margin:
-                                                const EdgeInsets.all(
-                                                    5.0),
-                                                padding:
-                                                const EdgeInsets.all(
-                                                    3.0),
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors
-                                                            .black)),
-                                                height: 200,
-                                                width:
-                                                MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Padding(
-                                                    padding:
-                                                    const EdgeInsets
-                                                        .all(8.0),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                      children: [
-                                                        const Text(
-                                                            "Description"),
-                                                        Expanded(
-                                                            child: Text(docs[
-                                                            i][
-                                                            'Description'])),
-                                                      ],
-                                                    )),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    );
-                                  },
-                                )
-                                    : const Center(
-                                  child: Text("No Task Found"),
-                                );
-                              }
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            },
-                          ),
-                          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                            stream: FirebaseFirestore.instance
-                                .collection('taskcollection')
-                                .doc('taskdata')
-                                .snapshots(),
-                            builder: (_, snapshot) {
-                              if (snapshot.hasError) {
-                                return Text('Error = ${snapshot.error}');
-                              }
-                              if (snapshot.hasData) {
-                                var mydoc = [];
-                                var indexes = [];
-                                var docs = snapshot.data!.data()!['array'];
-                                print(docs.toString());
-                                for (var i = 0; i < docs.length; i++) {
                                   if (docs[i]['task_status'] == "resolve") {
                                     indexes.add(i);
-                                    mydoc.add(snapshot.data!.data()!['array'][i]);
+                                    mydoc.add(
+                                        snapshot.data!.data()!['array'][i]);
                                   }
                                 }
                                 print(mydoc.toString());
                                 return mydoc.isNotEmpty
                                     ? ListView.builder(
-                                  itemCount: mydoc.length,
-                                  itemBuilder: (_, i) {
-                                    return ExpansionTile(
-                                      title: Text(mydoc[i]['title']),
-                                      trailing: SizedBox(
-                                        height: 100,
-                                        width: 50,
-                                        child: Padding(
-                                            padding:
-                                            const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                              onTapDown: (TapDownDetails details) {
-                                                _resolvePopUpMenu(
-                                                    mydoc[i]['title'].toString(),
-                                                    docs[
-                                                    i][
-                                                    'Description'],
-                                                    mydoc[i]['image']
-                                                        .toString()
-                                                        .replaceAll(
-                                                        '"', ''),
-                                                    indexes[
-                                                    i],
-                                                    mydoc[
-                                                    i][
-                                                    'task_id'],
-                                                    details.globalPosition,
-                                                    docs);
-                                              },
-                                              child: const Icon(
-                                                Icons.more_vert,
-                                                color: Colors.black,
-                                              ),
-                                            )),
-                                      ),
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 4,
-                                              child: Container(
-                                                margin:
-                                                const EdgeInsets.all(
-                                                    5.0),
-                                                padding:
-                                                const EdgeInsets.all(
-                                                    3.0),
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors
-                                                            .black)),
-                                                height: 200,
-                                                width:
-                                                MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Padding(
+                                        itemCount: mydoc.length,
+                                        itemBuilder: (_, i) {
+                                          return ExpansionTile(
+                                            title: Text(mydoc[i]['title']),
+                                            trailing: SizedBox(
+                                              height: 100,
+                                              width: 50,
+                                              child: Padding(
                                                   padding:
-                                                  const EdgeInsets
-                                                      .all(8.0),
-                                                  child: Image.network(
-                                                    docs[i]['image']
-                                                        .toString()
-                                                        .replaceAll(
-                                                        '"', ''),
-                                                    fit: BoxFit.fill,
+                                                      const EdgeInsets.all(8.0),
+                                                  child: GestureDetector(
+                                                    onTapDown: (TapDownDetails
+                                                        details) {
+                                                      _resolvePopUpMenu(
+                                                          mydoc[i]['title']
+                                                              .toString(),
+                                                          docs[i]
+                                                              ['Description'],
+                                                          mydoc[i]['image']
+                                                              .toString()
+                                                              .replaceAll(
+                                                                  '"', ''),
+                                                          indexes[i],
+                                                          mydoc[i]['task_id'],
+                                                          details
+                                                              .globalPosition,
+                                                          docs);
+                                                    },
+                                                    child: const Icon(
+                                                      Icons.more_vert,
+                                                      color: Colors.black,
+                                                    ),
+                                                  )),
+                                            ),
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    flex: 4,
+                                                    child: Container(
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3.0),
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color: Colors
+                                                                  .black)),
+                                                      height: 200,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Image.network(
+                                                          docs[i]['image']
+                                                              .toString()
+                                                              .replaceAll(
+                                                                  '"', ''),
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Container(
-                                                margin:
-                                                const EdgeInsets.all(
-                                                    5.0),
-                                                padding:
-                                                const EdgeInsets.all(
-                                                    3.0),
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors
-                                                            .black)),
-                                                height: 200,
-                                                width:
-                                                MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Padding(
-                                                    padding:
-                                                    const EdgeInsets
-                                                        .all(8.0),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                      children: [
-                                                        const Text(
-                                                            "Description"),
-                                                        Expanded(
-                                                            child: Text(docs[
-                                                            i][
-                                                            'Description'])),
-                                                      ],
-                                                    )),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    );
-                                  },
-                                )
+                                                  Expanded(
+                                                    flex: 3,
+                                                    child: Container(
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3.0),
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color: Colors
+                                                                  .black)),
+                                                      height: 200,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              const Text(
+                                                                  "Description"),
+                                                              Expanded(
+                                                                  child: Text(docs[
+                                                                          i][
+                                                                      'Description'])),
+                                                            ],
+                                                          )),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      )
                                     : const Center(
-                                  child: Text("No Task Found"),
-                                );
+                                        child: Text("No Task Found"),
+                                      );
                               }
                               return const Center(
                                   child: CircularProgressIndicator());
@@ -867,130 +882,130 @@ class _ListScreenState extends State<ListScreen> {
                                 for (var i = 0; i < docs.length; i++) {
                                   if (docs[i]['task_status'] == "close") {
                                     indexes.add(i);
-                                    mydoc.add(snapshot.data!.data()!['array'][i]);
+                                    mydoc.add(
+                                        snapshot.data!.data()!['array'][i]);
                                   }
                                 }
                                 return mydoc.isNotEmpty
                                     ? ListView.builder(
-                                  itemCount: mydoc.length,
-                                  itemBuilder: (_, i) {
-                                    return ExpansionTile(
-                                      title: Text(mydoc[i]['title']),
-                                      trailing: SizedBox(
-                                        height: 100,
-                                        width: 50,
-                                        child: Padding(
-                                            padding:
-                                            const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                              onTapDown: (TapDownDetails details) {
-                                                _closePopUpMenu(
-                                                    mydoc[i]['title'].toString(),
-                                                    docs[
-                                                    i][
-                                                    'Description'],
-                                                    mydoc[i]['image']
-                                                        .toString()
-                                                        .replaceAll(
-                                                        '"', ''),
-                                                    indexes[
-                                                    i],
-                                                    mydoc[
-                                                    i][
-                                                    'task_id'],
-                                                    details.globalPosition,
-                                                    docs);
-                                              },
-                                              child: const Icon(
-                                                Icons.more_vert,
-                                                color: Colors.black,
-                                              ),
-                                            )),
-                                      ),
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 4,
-                                              child: Container(
-                                                margin:
-                                                const EdgeInsets.all(
-                                                    5.0),
-                                                padding:
-                                                const EdgeInsets.all(
-                                                    3.0),
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors
-                                                            .black)),
-                                                height: 200,
-                                                width:
-                                                MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Padding(
+                                        itemCount: mydoc.length,
+                                        itemBuilder: (_, i) {
+                                          return ExpansionTile(
+                                            title: Text(mydoc[i]['title']),
+                                            trailing: SizedBox(
+                                              height: 100,
+                                              width: 50,
+                                              child: Padding(
                                                   padding:
-                                                  const EdgeInsets
-                                                      .all(8.0),
-                                                  child: Image.network(
-                                                    docs[i]['image']
-                                                        .toString()
-                                                        .replaceAll(
-                                                        '"', ''),
-                                                    fit: BoxFit.fill,
+                                                      const EdgeInsets.all(8.0),
+                                                  child: GestureDetector(
+                                                    onTapDown: (TapDownDetails
+                                                        details) {
+                                                      _closePopUpMenu(
+                                                          mydoc[i]['title']
+                                                              .toString(),
+                                                          docs[i]
+                                                              ['Description'],
+                                                          mydoc[i]['image']
+                                                              .toString()
+                                                              .replaceAll(
+                                                                  '"', ''),
+                                                          indexes[i],
+                                                          mydoc[i]['task_id'],
+                                                          details
+                                                              .globalPosition,
+                                                          docs);
+                                                    },
+                                                    child: const Icon(
+                                                      Icons.more_vert,
+                                                      color: Colors.black,
+                                                    ),
+                                                  )),
+                                            ),
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    flex: 4,
+                                                    child: Container(
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3.0),
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color: Colors
+                                                                  .black)),
+                                                      height: 200,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Image.network(
+                                                          docs[i]['image']
+                                                              .toString()
+                                                              .replaceAll(
+                                                                  '"', ''),
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Container(
-                                                margin:
-                                                const EdgeInsets.all(
-                                                    5.0),
-                                                padding:
-                                                const EdgeInsets.all(
-                                                    3.0),
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors
-                                                            .black)),
-                                                height: 200,
-                                                width:
-                                                MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Padding(
-                                                    padding:
-                                                    const EdgeInsets
-                                                        .all(8.0),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                      children: [
-                                                        const Text(
-                                                            "Description"),
-                                                        Expanded(
-                                                            child: Text(docs[
-                                                            i][
-                                                            'Description'])),
-                                                      ],
-                                                    )),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    );
-                                  },
-                                )
+                                                  Expanded(
+                                                    flex: 3,
+                                                    child: Container(
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3.0),
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color: Colors
+                                                                  .black)),
+                                                      height: 200,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              const Text(
+                                                                  "Description"),
+                                                              Expanded(
+                                                                  child: Text(docs[
+                                                                          i][
+                                                                      'Description'])),
+                                                            ],
+                                                          )),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      )
                                     : const Center(
-                                  child: Text("No Task Found"),
-                                );
+                                        child: Text("No Task Found"),
+                                      );
                               }
                               return const Center(
                                   child: CircularProgressIndicator());
